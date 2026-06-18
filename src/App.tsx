@@ -4,7 +4,7 @@ import types from "./data/types.json"
 
 /**
  * =========================
- * ⭐ 唯一状态：4轴模型
+ * Axis
  * =========================
  */
 type Axis = {
@@ -23,7 +23,7 @@ const initAxis: Axis = {
 
 /**
  * =========================
- * 类型计算（唯一真值）
+ * Type logic（不动）
  * =========================
  */
 function getType(axis: Axis) {
@@ -35,11 +35,6 @@ function getType(axis: Axis) {
   )
 }
 
-/**
- * =========================
- * types.json匹配
- * =========================
- */
 function matchType(code: string) {
   return types.find((t: any) => t.axes.code === code) || {
     name: code,
@@ -49,7 +44,7 @@ function matchType(code: string) {
 
 /**
  * =========================
- * ⭐ axis更新（不改逻辑）
+ * apply（不动逻辑）
  * =========================
  */
 function apply(setAxis: any, tag: string, value: number) {
@@ -93,7 +88,7 @@ function apply(setAxis: any, tag: string, value: number) {
 
 /**
  * =========================
- * 轴条 UI（升级但轻量）
+ * Axis bar（移动端优化）
  * =========================
  */
 function AxisBar({
@@ -109,13 +104,13 @@ function AxisBar({
   const percent = ((v + 1) / 2) * 100
 
   return (
-    <div style={{ marginBottom: 18 }}>
+    <div style={{ marginBottom: 14 }}>
       <div
         style={{
           display: "flex",
           justifyContent: "space-between",
-          fontSize: 13,
-          color: "#555",
+          fontSize: 12,
+          color: "#666",
           marginBottom: 6
         }}
       >
@@ -184,53 +179,44 @@ export default function App() {
       <div
         style={{
           minHeight: "100vh",
+          background: "#f6f7fb",
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          background: "#f6f7fb",
+          padding: 16,
+          boxSizing: "border-box",
           fontFamily: "system-ui"
         }}
       >
         <div
           style={{
-            width: 560,
+            width: "100%",
+            maxWidth: 520,
             background: "white",
-            borderRadius: 18,
-            padding: 30,
-            boxShadow: "0 12px 35px rgba(0,0,0,0.08)"
+            borderRadius: 16,
+            padding: 20,
+            boxShadow: "0 10px 30px rgba(0,0,0,0.08)"
           }}
         >
-          {/* 标题区（彻底解决重叠问题） */}
-          <div style={{ textAlign: "center", marginBottom: 20 }}>
-            <div
-              style={{
-                fontSize: 30,
-                fontWeight: 800,
-                letterSpacing: 1
-              }}
-            >
-              EETI 结果
-            </div>
+          <div style={{ textAlign: "center" }}>
+            <div style={{ fontSize: 26, fontWeight: 800 }}>EETI 结果</div>
 
             <div
               style={{
-                fontSize: 64,
+                fontSize: 56,
                 fontWeight: 900,
                 color: "#4f46e5",
-                lineHeight: 1,
                 marginTop: 6
               }}
             >
               {type}
             </div>
 
-            {/* ⭐ 中文类型名：更明显 */}
             <div
               style={{
-                marginTop: 10,
-                fontSize: 22,
-                fontWeight: 800,
-                color: "#111"
+                fontSize: 20,
+                fontWeight: 700,
+                marginTop: 10
               }}
             >
               {info.name}
@@ -238,22 +224,21 @@ export default function App() {
 
             <div
               style={{
-                marginTop: 6,
                 fontSize: 14,
                 color: "#666",
-                lineHeight: 1.5
+                marginTop: 6
               }}
             >
               {info.desc}
             </div>
           </div>
 
-          <hr style={{ margin: "18px 0" }} />
-
-          <AxisBar left="Discrete" right="Continuous" value={-axis.DC} />
-          <AxisBar left="Ideal" right="Real" value={-axis.IR} />
-          <AxisBar left="Offshoot" right="Accumulation" value={-axis.OA} />
-          <AxisBar left="General" right="Specific" value={-axis.GS} />
+          <div style={{ marginTop: 20 }}>
+            <AxisBar left="C" right="D" value={axis.DC} />
+            <AxisBar left="R" right="I" value={axis.IR} />
+            <AxisBar left="A" right="O" value={axis.OA} />
+            <AxisBar left="S" right="G" value={axis.GS} />
+          </div>
         </div>
       </div>
     )
@@ -261,7 +246,7 @@ export default function App() {
 
   /**
    * =========================
-   * QUESTION PAGE
+   * QUESTION PAGE（手机优化）
    * =========================
    */
   return (
@@ -272,29 +257,33 @@ export default function App() {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
+        padding: 16,
+        boxSizing: "border-box",
         fontFamily: "system-ui"
       }}
     >
       <div
         style={{
-          width: 620,
+          width: "100%",
+          maxWidth: 620,
           background: "white",
-          borderRadius: 18,
-          padding: 30,
+          borderRadius: 16,
+          padding: 20,
           boxShadow: "0 10px 30px rgba(0,0,0,0.08)"
         }}
       >
         {/* progress */}
-        <div style={{ fontSize: 13, color: "#888", marginBottom: 10 }}>
-          第 {index + 1} / {questions.length} 题
+        <div style={{ fontSize: 12, color: "#888" }}>
+          {index + 1} / {questions.length}
         </div>
 
         {/* question */}
         <div
           style={{
-            fontSize: 20,
+            fontSize: 18,
             fontWeight: 700,
-            marginBottom: 18
+            marginTop: 10,
+            marginBottom: 16
           }}
         >
           {q.title}
@@ -305,22 +294,21 @@ export default function App() {
           style={{
             background: "#f3f4f6",
             borderRadius: 12,
-            padding: 14,
-            marginBottom: 22
+            padding: 12,
+            marginBottom: 18,
+            fontSize: 13
           }}
         >
-          <div>{q.scale?.["-5"]}（左/负）</div>
-          <div style={{ textAlign: "center", margin: "8px 0", color: "#999" }}>
-            VS
-          </div>
-          <div>{q.scale?.["5"]}（右/正）</div>
+          <div>{q.scale?.["-5"]}</div>
+          <div style={{ textAlign: "center", margin: "6px 0" }}>VS</div>
+          <div>{q.scale?.["5"]}</div>
         </div>
 
-        {/* buttons */}
+        {/* buttons（移动端关键优化） */}
         <div
           style={{
             display: "grid",
-            gridTemplateColumns: "repeat(6, 1fr)",
+            gridTemplateColumns: "repeat(auto-fit, minmax(60px, 1fr))",
             gap: 10
           }}
         >
@@ -329,19 +317,14 @@ export default function App() {
               key={v}
               onClick={() => {
                 apply(setAxis, q.positiveTag, v)
-
-                setTimeout(() => {
-                  setIndex(i => i + 1)
-                }, 0)
+                setTimeout(() => setIndex(i => i + 1), 0)
               }}
               style={{
                 padding: "10px 0",
                 borderRadius: 10,
                 border: "1px solid #e5e7eb",
                 background: v > 0 ? "#eef2ff" : "#fff",
-                color: v > 0 ? "#4f46e5" : "#111",
-                fontWeight: 600,
-                cursor: "pointer"
+                fontWeight: 600
               }}
             >
               {v > 0 ? `+${v}` : v}

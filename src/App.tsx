@@ -2,11 +2,6 @@ import { useState } from "react"
 import questions from "./data/questions.json"
 import types from "./data/types.json"
 
-/**
- * =========================
- * Axis
- * =========================
- */
 type Axis = {
   DC: number
   IR: number
@@ -21,11 +16,6 @@ const initAxis: Axis = {
   GS: 0
 }
 
-/**
- * =========================
- * Type logic（不动）
- * =========================
- */
 function getType(axis: Axis) {
   return (
     (axis.DC >= 0 ? "D" : "C") +
@@ -42,11 +32,6 @@ function matchType(code: string) {
   }
 }
 
-/**
- * =========================
- * apply（不动逻辑）
- * =========================
- */
 function apply(setAxis: any, tag: string, value: number) {
   const v = value / 5
 
@@ -86,11 +71,6 @@ function apply(setAxis: any, tag: string, value: number) {
   })
 }
 
-/**
- * =========================
- * Axis bar（移动端优化）
- * =========================
- */
 function AxisBar({
   left,
   right,
@@ -104,14 +84,15 @@ function AxisBar({
   const percent = ((v + 1) / 2) * 100
 
   return (
-    <div style={{ marginBottom: 14 }}>
+    <div style={{ marginBottom: 16 }}>
       <div
         style={{
           display: "flex",
           justifyContent: "space-between",
           fontSize: 12,
           color: "#666",
-          marginBottom: 6
+          marginBottom: 6,
+          gap: 12
         }}
       >
         <span>{left}</span>
@@ -155,22 +136,12 @@ function AxisBar({
   )
 }
 
-/**
- * =========================
- * APP
- * =========================
- */
 export default function App() {
   const [index, setIndex] = useState(0)
   const [axis, setAxis] = useState<Axis>(initAxis)
 
   const q = questions[index]
 
-  /**
-   * =========================
-   * RESULT PAGE
-   * =========================
-   */
   if (!q) {
     const type = getType(axis)
     const info = matchType(type)
@@ -234,21 +205,16 @@ export default function App() {
           </div>
 
           <div style={{ marginTop: 20 }}>
-            <AxisBar left="C" right="D" value={axis.DC} />
-            <AxisBar left="R" right="I" value={axis.IR} />
-            <AxisBar left="A" right="O" value={axis.OA} />
-            <AxisBar left="S" right="G" value={axis.GS} />
+            <AxisBar left="Continuous" right="Discrete" value={axis.DC} />
+            <AxisBar left="Real" right="Ideal" value={axis.IR} />
+            <AxisBar left="Accumulation" right="Offshoot" value={axis.OA} />
+            <AxisBar left="Specific" right="General" value={axis.GS} />
           </div>
         </div>
       </div>
     )
   }
 
-  /**
-   * =========================
-   * QUESTION PAGE（手机优化）
-   * =========================
-   */
   return (
     <div
       style={{
@@ -272,12 +238,10 @@ export default function App() {
           boxShadow: "0 10px 30px rgba(0,0,0,0.08)"
         }}
       >
-        {/* progress */}
         <div style={{ fontSize: 12, color: "#888" }}>
           {index + 1} / {questions.length}
         </div>
 
-        {/* question */}
         <div
           style={{
             fontSize: 18,
@@ -289,7 +253,6 @@ export default function App() {
           {q.title}
         </div>
 
-        {/* scale */}
         <div
           style={{
             background: "#f3f4f6",
@@ -299,12 +262,17 @@ export default function App() {
             fontSize: 13
           }}
         >
-          <div>{q.scale?.["-5"]}</div>
+          <div>
+            <b>（左/负）</b>
+            {q.scale?.["-5"]}
+          </div>
           <div style={{ textAlign: "center", margin: "6px 0" }}>VS</div>
-          <div>{q.scale?.["5"]}</div>
+          <div>
+            <b>（右/正）</b>
+            {q.scale?.["5"]}
+          </div>
         </div>
 
-        {/* buttons（移动端关键优化） */}
         <div
           style={{
             display: "grid",
@@ -323,8 +291,9 @@ export default function App() {
                 padding: "10px 0",
                 borderRadius: 10,
                 border: "1px solid #e5e7eb",
-                background: v > 0 ? "#eef2ff" : "#fff",
-                fontWeight: 600
+                background: v > 0 ? "#eef2ff" : "#fff7ed",
+                color: v > 0 ? "#4338ca" : "#c2410c",
+                fontWeight: 700
               }}
             >
               {v > 0 ? `+${v}` : v}
